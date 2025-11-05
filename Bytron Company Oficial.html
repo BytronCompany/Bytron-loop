@@ -1,0 +1,72 @@
+<!doctype html>
+
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Pantalla de carga indefinida</title>
+  <style>
+    /* Reset mínimo */
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%}/* Contenedor fullscreen */
+.loader-fullscreen{
+  position:fixed;inset:0;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(180deg,#05060a 0%,#0b1220 100%);color:#e6eef8;font-family:Inter, system-ui, -apple-system, "Helvetica Neue", Arial;
+  z-index:9999;flex-direction:column;gap:18px;padding:20px;
+}
+
+/* Tarjeta central */
+.card{display:flex;flex-direction:column;align-items:center;gap:12px;padding:22px;border-radius:12px;background:rgba(255,255,255,0.03);backdrop-filter:blur(4px);box-shadow:0 8px 40px rgba(2,6,23,0.6);max-width:560px;width:92%;text-align:center}
+
+/* GIF: usa archivo local (loader.gif) */
+.gif{width:220px;height:220px;object-fit:contain;border-radius:10px;display:block}
+
+.title{font-size:18px;font-weight:700}
+.subtitle{font-size:13px;opacity:0.75}
+
+/* Texto de carga animado simple */
+.dots{font-weight:600;margin-top:6px}
+@keyframes blink{0%{opacity:0.2}50%{opacity:1}100%{opacity:0.2}}
+
+/* Footer discreto */
+.footer{position:fixed;left:12px;bottom:10px;font-size:12px;opacity:0.6}
+
+@media (max-width:420px){.gif{width:140px;height:140px}}
+
+  </style>
+</head>
+<body>  <!--
+    INSTRUCCIONES RÁPIDAS:
+    1) Guarda tu GIF con el nombre "loader.gif" en la misma carpeta que este archivo .html.
+    2) Abre este archivo en cualquier navegador (doble click o abrir con).
+    3) La pantalla de carga permanecerá visible indefinidamente — no hay botones ni lógica para cerrarla.
+    4) Si quieres usar otro nombre de archivo, edita la línea: <img src="loader.gif" ...> y pon el nombre que quieras.
+  -->  <div class="loader-fullscreen" role="status" aria-live="polite">
+    <div class="card">
+      <!-- Usa un GIF local llamado 'loader.gif' (colócalo al lado de este .html) -->
+      <img src="loader.gif" alt="Animación de carga" class="gif" id="loaderGif" draggable="false">
+      <div class="title">Cargando</div>
+      <div class="subtitle">Esta pantalla de carga permanecerá hasta que cierres la pestaña.</div>
+      <div class="dots" id="dots">.</div>
+    </div>
+  </div>  <div class="footer">Generado por <strong>Roido</strong></div>  <script>
+    // Ciclo simple de puntos para dar sensación de actividad (sin posibilidad de cerrar automáticamente)
+    const dots = document.getElementById('dots');
+    let i = 0;
+    setInterval(()=>{ i = (i+1)%4; dots.textContent = '.'.repeat(i); }, 500);
+
+    // Accesibilidad: si el GIF no carga, mostramos texto alternativo claro
+    const gif = document.getElementById('loaderGif');
+    gif.addEventListener('error', ()=>{
+      gif.style.display = 'none';
+      const alt = document.createElement('div');
+      alt.textContent = 'GIF no encontrado. Asegúrate de guardar "loader.gif" junto a este archivo.';
+      alt.style.padding = '6px 10px';
+      alt.style.background = 'rgba(255,255,255,0.02)';
+      alt.style.borderRadius = '8px';
+      document.querySelector('.card').insertBefore(alt, document.querySelector('.dots'));
+    });
+
+    // Nota: intencionalmente no añadí controles ni temporizadores para cerrar — la carga es "indefinida".
+  </script></body>
+</html>
